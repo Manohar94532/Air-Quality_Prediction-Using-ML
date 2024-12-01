@@ -1,1 +1,1 @@
-# Air-Quality_Prediction-Using-ML
+This project predicts the Air Quality Index (AQI) using a Random Forest Regressor, with data from various pollutants like PM2.5, NO2, and SO2. It includes a Flask-based web application that allows users to input air quality data and get AQI predictions, along with categorization into different air quality bands. The code provides a simple development server for demonstration and can be extended with advanced models and production-grade deployment. For licensing and support, please refer to the project's license and documentation files.

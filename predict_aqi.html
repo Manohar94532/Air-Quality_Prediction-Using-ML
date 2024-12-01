@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict AQI</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h3>Predict AQI</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/predict" method="post">
+                            <div class="form-group">
+                                <label for="city">City:</label>
+                                <input type="text" class="form-control" id="city" name="city" placeholder="Enter city name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pm25">PM2.5 concentration:</label>
+                                <input type="text" class="form-control" id="pm25" name="pm25" placeholder="Enter PM2.5 value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="no">NO concentration:</label>
+                                <input type="text" class="form-control" id="no" name="no" placeholder="Enter NO value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="no2">NO2 concentration:</label>
+                                <input type="text" class="form-control" id="no2" name="no2" placeholder="Enter NO2 value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nox">NOx concentration:</label>
+                                <input type="text" class="form-control" id="nox" name="nox" placeholder="Enter NOx value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nh3">NH3 concentration:</label>
+                                <input type="text" class="form-control" id="nh3" name="nh3" placeholder="Enter NH3 value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="co">CO concentration:</label>
+                                <input type="text" class="form-control" id="co" name="co" placeholder="Enter CO value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="so2">SO2 concentration:</label>
+                                <input type="text" class="form-control" id="so2" name="so2" placeholder="Enter SO2 value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="o3">O3 concentration:</label>
+                                <input type="text" class="form-control" id="o3" name="o3" placeholder="Enter O3 value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="benzene">Benzene concentration:</label>
+                                <input type="text" class="form-control" id="benzene" name="benzene" placeholder="Enter Benzene value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="toluene">Toluene concentration:</label>
+                                <input type="text" class="form-control" id="toluene" name="toluene" placeholder="Enter Toluene value" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="xylene">Xylene concentration:</label>
+                                <input type="text" class="form-control" id="xylene" name="xylene" placeholder="Enter Xylene value" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-block">Predict AQI</button>
+                        </form>
+                    </div>
+                </div>
+                {% if prediction %}
+                <div class="mt-4 text-center">
+                    <h4>Predicted AQI: {{ prediction }}</h4>
+                    <h4>Air Quality: {{ prediction1 }}</h4>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
