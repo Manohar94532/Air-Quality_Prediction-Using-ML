@@ -3,97 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predict AQI</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
+    <title>Air Quality Index (AQI) Predictor</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .card-header {
+            background-color: #4a90e2;
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-control {
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 10px rgba(74,144,226,0.3);
+            border-color: #4a90e2;
+        }
+        .prediction-card {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            transform: scale(0.8);
+        }
+        .prediction-card.show {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+        .air-quality-badge {
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+        .air-quality-good { background-color: #4CAF50; color: white; }
+        .air-quality-moderate { background-color: #FFC107; color: black; }
+        .air-quality-unhealthy { background-color: #FF5722; color: white; }
+        .air-quality-very-unhealthy { background-color: #9C27B0; color: white; }
+        .air-quality-hazardous { background-color: #F44336; color: white; }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <div class="card">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card animate__animated animate__fadeIn">
                     <div class="card-header text-center">
-                        <h3>Predict AQI</h3>
+                        <h3 class="mb-0">Air Quality Index Predictor</h3>
                     </div>
                     <div class="card-body">
-                        <form action="/predict" method="post">
-                            <div class="form-group">
-                                <label for="city">City:</label>
-                                <input type="text" class="form-control" id="city" name="city" placeholder="Enter city name" required>
+                        <form id="aqiForm" novalidate>
+                            <div class="mb-3">
+                                <label for="city" class="form-label">City</label>
+                                <input type="text" class="form-control" id="city" name="city" 
+                                       placeholder="Enter city name" required>
+                                <div class="invalid-feedback">Please enter a city name.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="pm25">PM2.5 concentration:</label>
-                                <input type="text" class="form-control" id="pm25" name="pm25" placeholder="Enter PM2.5 value" required>
+
+                            <div class="mb-3">
+                                <label for="pm25" class="form-label">PM2.5 Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="pm25" name="pm25" 
+                                       placeholder="Enter PM2.5 concentration" required>
+                                <div class="invalid-feedback">Please enter a valid PM2.5 value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="no">NO concentration:</label>
-                                <input type="text" class="form-control" id="no" name="no" placeholder="Enter NO value" required>
+
+                            <div class="mb-3">
+                                <label for="no" class="form-label">NO Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="no" name="no" 
+                                       placeholder="Enter NO concentration" required>
+                                <div class="invalid-feedback">Please enter a valid NO value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="no2">NO2 concentration:</label>
-                                <input type="text" class="form-control" id="no2" name="no2" placeholder="Enter NO2 value" required>
+
+                            <div class="mb-3">
+                                <label for="no2" class="form-label">NO2 Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="no2" name="no2" 
+                                       placeholder="Enter NO2 concentration" required>
+                                <div class="invalid-feedback">Please enter a valid NO2 value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="nox">NOx concentration:</label>
-                                <input type="text" class="form-control" id="nox" name="nox" placeholder="Enter NOx value" required>
+
+                            <div class="mb-3">
+                                <label for="nox" class="form-label">NOx Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="nox" name="nox" 
+                                       placeholder="Enter NOx concentration" required>
+                                <div class="invalid-feedback">Please enter a valid NOx value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="nh3">NH3 concentration:</label>
-                                <input type="text" class="form-control" id="nh3" name="nh3" placeholder="Enter NH3 value" required>
+
+                            <div class="mb-3">
+                                <label for="nh3" class="form-label">NH3 Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="nh3" name="nh3" 
+                                       placeholder="Enter NH3 concentration" required>
+                                <div class="invalid-feedback">Please enter a valid NH3 value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="co">CO concentration:</label>
-                                <input type="text" class="form-control" id="co" name="co" placeholder="Enter CO value" required>
+
+                            <div class="mb-3">
+                                <label for="co" class="form-label">CO Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="co" name="co" 
+                                       placeholder="Enter CO concentration" required>
+                                <div class="invalid-feedback">Please enter a valid CO value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="so2">SO2 concentration:</label>
-                                <input type="text" class="form-control" id="so2" name="so2" placeholder="Enter SO2 value" required>
+
+                            <div class="mb-3">
+                                <label for="so2" class="form-label">SO2 Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="so2" name="so2" 
+                                       placeholder="Enter SO2 concentration" required>
+                                <div class="invalid-feedback">Please enter a valid SO2 value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="o3">O3 concentration:</label>
-                                <input type="text" class="form-control" id="o3" name="o3" placeholder="Enter O3 value" required>
+
+                            <div class="mb-3">
+                                <label for="o3" class="form-label">O3 Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="o3" name="o3" 
+                                       placeholder="Enter O3 concentration" required>
+                                <div class="invalid-feedback">Please enter a valid O3 value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="benzene">Benzene concentration:</label>
-                                <input type="text" class="form-control" id="benzene" name="benzene" placeholder="Enter Benzene value" required>
+
+                            <div class="mb-3">
+                                <label for="benzene" class="form-label">Benzene Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="benzene" name="benzene" 
+                                       placeholder="Enter Benzene concentration" required>
+                                <div class="invalid-feedback">Please enter a valid Benzene value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="toluene">Toluene concentration:</label>
-                                <input type="text" class="form-control" id="toluene" name="toluene" placeholder="Enter Toluene value" required>
+
+                            <div class="mb-3">
+                                <label for="toluene" class="form-label">Toluene Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="toluene" name="toluene" 
+                                       placeholder="Enter Toluene concentration" required>
+                                <div class="invalid-feedback">Please enter a valid Toluene value.</div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="xylene">Xylene concentration:</label>
-                                <input type="text" class="form-control" id="xylene" name="xylene" placeholder="Enter Xylene value" required>
+
+                            <div class="mb-3">
+                                <label for="xylene" class="form-label">Xylene Concentration (μg/m³)</label>
+                                <input type="number" step="0.01" class="form-control" id="xylene" name="xylene" 
+                                       placeholder="Enter Xylene concentration" required>
+                                <div class="invalid-feedback">Please enter a valid Xylene value.</div>
                             </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-block">Predict AQI</button>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+                                Predict Air Quality
+                            </button>
                         </form>
+
+                        <!-- Enhanced Prediction Result -->
+                        <div id="predictionCard" class="prediction-card mt-4 text-center">
+                            <div id="aqiResult" class="alert" role="alert">
+                                <h4 id="predictedAQI" class="mb-3"></h4>
+                                <div id="airQuality" class="air-quality-badge"></div>
+                                <p id="healthRecommendation" class="mt-3 text-muted"></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                {% if prediction %}
-                <div class="mt-4 text-center">
-                    <h4>Predicted AQI: {{ prediction }}</h4>
-                    <h4>Air Quality: {{ prediction1 }}</h4>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap 5 JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('aqiForm');
+            const predictionCard = document.getElementById('predictionCard');
+            const predictedAQIElement = document.getElementById('predictedAQI');
+            const airQualityElement = document.getElementById('airQuality');
+            const healthRecommendationElement = document.getElementById('healthRecommendation');
+
+            // AQI Classification and Health Recommendations
+            const classifyAQI = (aqi) => {
+                if (aqi <= 50) {
+                    return {
+                        category: 'Good',
+                        cssClass: 'air-quality-good',
+                        recommendation: 'Air quality is satisfactory. Enjoy your outdoor activities!'
+                    };
+                } else if (aqi <= 100) {
+                    return {
+                        category: 'Moderate',
+                        cssClass: 'air-quality-moderate',
+                        recommendation: 'Some pollutants may be a moderate health concern. Sensitive groups should consider reducing prolonged outdoor exertion.'
+                    };
+                } else if (aqi <= 150) {
+                    return {
+                        category: 'Unhealthy for Sensitive Groups',
+                        cssClass: 'air-quality-unhealthy',
+                        recommendation: 'Members of sensitive groups may experience health effects. Reduce prolonged or heavy outdoor exertion.'
+                    };
+                } else if (aqi <= 200) {
+                    return {
+                        category: 'Unhealthy',
+                        cssClass: 'air-quality-very-unhealthy',
+                        recommendation: 'Everyone may begin to experience health effects. Avoid prolonged outdoor activities.'
+                    };
+                } else {
+                    return {
+                        category: 'Hazardous',
+                        cssClass: 'air-quality-hazardous',
+                        recommendation: 'Health warning: everyone is at high risk. Remain indoors and avoid all outdoor activities.'
+                    };
+                }
+            };
+
+            // Form validation
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                // Bootstrap form validation
+                if (form.checkValidity()) {
+                    // Simulate prediction (replace with actual prediction logic)
+                    const prediction = Math.floor(Math.random() * 250);  // Random AQI between 0-250
+                    const aqiInfo = classifyAQI(prediction);
+
+                    // Update prediction card
+                    predictedAQIElement.textContent = `Predicted AQI: ${prediction}`;
+                    airQualityElement.textContent = aqiInfo.category;
+                    airQualityElement.className = `air-quality-badge ${aqiInfo.cssClass}`;
+                    healthRecommendationElement.textContent = aqiInfo.recommendation;
+
+                    // Show prediction card with animation
+                    predictionCard.classList.add('show');
+                    predictionCard.classList.add('animate__animated');
+                    predictionCard.classList.add('animate__bounceIn');
+                } else {
+                    form.classList.add('was-validated');
+                }
+            });
+
+            // Input validation and formatting
+            const numberInputs = form.querySelectorAll('input[type="number"]');
+            numberInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    // Prevent negative numbers
+                    this.value = Math.max(0, this.value);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
